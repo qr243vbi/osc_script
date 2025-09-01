@@ -3,22 +3,22 @@ if command -v apt; then
 
 export SCRIPT_DIR=$PWD
 
-mkdir -p ~/extra/home ||:
+mkdir -p $SCRIPT_DIR/extra/home ||:
 sudo mkdir -p /opensuse/{extra,script}
 
 (
-if [[ -d ~/extra/repo ]]; then
-  cd ~/extra/repo
+if [[ -d $SCRIPT_DIR/extra/repo ]]; then
+  cd $SCRIPT_DIR/extra/repo
   git pull
 else 
-  git clone --depth 1 --single-branch https://github.com/huakim/repo-suse ~/extra/repo
+  git clone --depth 1 --single-branch https://github.com/huakim/repo-suse $SCRIPT_DIR/extra/repo
 fi
 )
 
 (
-sudo mount --bind ~/extra /opensuse/extra
+sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
 sudo mount --bind $SCRIPT_DIR /opensuse/script
-cd ~/extra/repo/pacman
+cd $SCRIPT_DIR/extra/repo/pacman
 sudo bash -x ./aptbk.sh
 sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
@@ -32,7 +32,7 @@ else
 mount --bind /extra/home $HOME
 
 (
-mkdir -p ~/.config/osc ||:
+mkdir -p "$HOME/.config/osc" ||:
 oscrc="$HOME/.config/osc/oscrc"
 echo '[general]' > $oscrc
 echo 'apiurl=https://api.opensuse.org' >> $oscrc
