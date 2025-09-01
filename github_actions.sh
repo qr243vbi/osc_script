@@ -1,3 +1,4 @@
+set -e
 if command -v apt; then
 
 export SCRIPT_DIR=$PWD
@@ -23,7 +24,7 @@ sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils env bash sed
 mount --bind ~/extra /opensuse/extra
 mount --bind $SCRIPT_DIR /opensuse/script
-systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /opensuse/script/github_action.sh
+sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /opensuse/script/github_action.sh
 )
 
 else
