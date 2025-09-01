@@ -49,7 +49,7 @@ for i in 'gram'
 do
 set +e
 (
-osc co home:juzbun:$i -o $i
+osc co "home:${OBS_USER}:$i" -o $i
 cd $i
 export INSTALL_ONLY=yes
 source /script/update_all.sh
