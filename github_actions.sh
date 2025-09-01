@@ -4,7 +4,7 @@ if command -v apt; then
 export SCRIPT_DIR=$PWD
 
 mkdir -p ~/extra/home ||:
-sudo mkdir -p /opensuse/extra
+sudo mkdir -p /opensuse/{extra,script}
 
 (
 if [[ -d ~/extra/repo ]]; then
@@ -21,9 +21,9 @@ sudo bash -x ./aptbk.sh
 sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
-sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils env bash sed
-mount --bind ~/extra /opensuse/extra
-mount --bind $SCRIPT_DIR /opensuse/script
+sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed
+sudo mount --bind ~/extra /opensuse/extra
+sudo mount --bind $SCRIPT_DIR /opensuse/script
 sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /opensuse/script/github_action.sh
 )
 
