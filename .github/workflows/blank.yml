@@ -31,7 +31,9 @@ jobs:
         id: cache-packages-restore  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
-          key: ${{ runner.os }}-packages-repo
+          key: ${{ runner.os }}-packages-${{ hashFiles('**/*.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-packages-
 
       - name: update_project
         run: |
@@ -42,4 +44,4 @@ jobs:
         id: cache-packages-save  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
-          key: ${{ runner.os }}-packages-repo
+          key: ${{ runner.os }}-packages-${{ hashFiles('**/*.sh') }}
