@@ -16,14 +16,15 @@ fi
 )
 
 (
+sudo mount --bind ~/extra /opensuse/extra
+sudo mount --bind $SCRIPT_DIR /opensuse/script
+sudo ls /opensuse/script
 cd ~/extra/repo/pacman
 sudo bash -x ./aptbk.sh
 sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed
-sudo mount --bind ~/extra /opensuse/extra
-sudo mount --bind $SCRIPT_DIR /opensuse/script
 sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /opensuse/script/github_action.sh
 )
 
