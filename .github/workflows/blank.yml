@@ -26,17 +26,20 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: cache_packages
-        uses: actions/cache@v4
+      - name: cache_packages_restore
+        uses: actions/cache/restore@v4
         id: cache-packages  # give it a name for checking the cache hit-or-not
         with:
-          path: ~/extra  # what we cache: the folder
-          key: ${{ runner.os }}-packages-${{ hashFiles('**/*.sh') }}
-          restore-keys: |
-            ${{ runner.os }}-packages-
+          path: extra  # what we cache: the folder
+          key: ${{ runner.os }}-packages-repo
 
       - name: update_project
         run: |
           env OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
 
-      
+      - name: cache_packages_save
+        uses: actions/cache/save@v4
+        id: cache-packages  # give it a name for checking the cache hit-or-not
+        with:
+          path: extra  # what we cache: the folder
+          key: ${{ runner.os }}-packages-repo
