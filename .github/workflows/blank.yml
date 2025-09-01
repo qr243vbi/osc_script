@@ -65,7 +65,7 @@ jobs:
 
       - name: Save Cache
         uses: actions/cache/save@v4
-        id: cache-packages-save  # give it a name for checking the cache hit-or-not
+        id: cache-packages-save
         with:
           path: extra  # what we cache: the folder
           key: ${{ runner.os }}-packages-repo
