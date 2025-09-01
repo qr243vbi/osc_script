@@ -25,9 +25,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
         uses: actions/checkout@v4
-      
       - name: restore cache
-      - uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4
         id: cache
         with:
           path: extra
@@ -36,9 +35,8 @@ jobs:
       - name: update_project
         run: |
           env OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
-
-      
-      - uses: actions/cache/save@v4
+      - name: save cache
+        uses: actions/cache/save@v4
         id: cache
         with:
           path: extra
