@@ -16,6 +16,7 @@ fi
 )
 
 (
+chmod 777 -Rfv $SCRIPT_DIR/extra
 sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
 sudo mount --bind $SCRIPT_DIR /opensuse/script
 cd $SCRIPT_DIR/extra/repo/pacman
@@ -50,7 +51,8 @@ cd /extra/repo/pacman
 bash -x ./aptat.sh
 mkdir $HOME/Desktop
 cd $HOME/Desktop
-for i in 'gram'
+OBS_PROJECTS="${OBS_PROJECTS:-gram}"
+for i in $OBS_PROJECTS
 do
 set +e
 (

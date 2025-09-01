@@ -35,7 +35,7 @@ jobs:
 
       - name: update_project
         run: |
-          env OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
+          env OBS_PROJECTS="${{ secrets.OBS_PROJECTS }}" OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
 
       - name: cache_packages_save
         uses: actions/cache/save@v4
