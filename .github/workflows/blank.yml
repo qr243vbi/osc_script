@@ -28,7 +28,7 @@ jobs:
 
       - name: cache_packages_restore
         uses: actions/cache/restore@v4
-        id: cache-packages  # give it a name for checking the cache hit-or-not
+        id: cache-packages-restore  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
           key: ${{ runner.os }}-packages-repo
@@ -39,7 +39,7 @@ jobs:
 
       - name: cache_packages_save
         uses: actions/cache/save@v4
-        id: cache-packages  # give it a name for checking the cache hit-or-not
+        id: cache-packages-save  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
           key: ${{ runner.os }}-packages-repo
