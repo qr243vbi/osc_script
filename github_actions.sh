@@ -24,6 +24,7 @@ sudo bash -x ./aptbk.sh
 sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
+sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install zypper
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed
 sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_actions.sh
 
@@ -49,7 +50,7 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 (
 cd /extra/repo/pacman
 bash -x ./aptat.sh
-mkdir $HOME/Desktop
+mkdir $HOME/Desktop ||:
 cd $HOME/Desktop
 OBS_PROJECTS="${OBS_PROJECTS:-gram}"
 for i in $OBS_PROJECTS
