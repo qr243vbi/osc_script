@@ -52,6 +52,7 @@ bash -x ./aptat.sh
 mkdir $HOME/Desktop ||:
 cd $HOME/Desktop
 OBS_PROJECTS="${OBS_PROJECTS:-gram}"
+rpmdb --rebuilddb
 zypper --gpg-auto-import-keys --non-interactive ref
 for i in $OBS_PROJECTS
 do
