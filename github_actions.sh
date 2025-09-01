@@ -43,13 +43,21 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 )
 
 (
-cd Desktop
-osc co home:juzbun:kde-plasma -o kde-plasma
-cd kde-plasma
+mkdir $HOME/Desktop
+cd $HOME/Desktop
+for i in 'kde-plasma' 'gram'
+do
+set +e
+(
+osc co home:juzbun:$i -o $i
+cd $i
 export INSTALL_ONLY=yes
 source /extra/script/update_all.sh
 unset INSTALL_ONLY
 source /extra/script/update_all.sh
+)
+set -e
+done
 )
 
 fi
