@@ -31,10 +31,15 @@ jobs:
         id: cache
         with:
           path: extra
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-repo_cache
       
       - name: update_project
         run: |
           env OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
 
       
+      - uses: actions/cache/save@v4
+        id: cache
+        with:
+          path: extra
+          key: ${{ runner.os }}-repo_cache
