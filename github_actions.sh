@@ -25,7 +25,7 @@ sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed obs-tools-zypper-pkg
-sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_actions.sh
+sudo systemd-nspawn -D /opensuse /bin/env OBS_PROJECTS=${OBS_PROJECTS} OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_actions.sh
 
 sudo chown `whoami` -Rfv $SCRIPT_DIR/extra
 sudo chgrp `whoami` -Rfv $SCRIPT_DIR/extra
@@ -52,6 +52,7 @@ bash -x ./aptat.sh
 mkdir $HOME/Desktop ||:
 cd $HOME/Desktop
 OBS_PROJECTS="${OBS_PROJECTS:-gram}"
+zypper --gpg-auto-import-keys --non-interactive ref
 for i in $OBS_PROJECTS
 do
 set +e
