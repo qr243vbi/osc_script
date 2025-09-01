@@ -24,8 +24,7 @@ sudo bash -x ./aptat.sh
 sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed
-sudo systemd-nspawn -D /opensuse /bin/ls /script
-sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_action.sh
+sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_actions.sh
 )
 
 else

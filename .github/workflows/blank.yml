@@ -37,6 +37,6 @@ jobs:
       
       - name: update_project
         run: |
-          bash -x ./github_actions.sh
+          env OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
 
       
