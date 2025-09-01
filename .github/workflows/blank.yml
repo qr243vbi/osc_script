@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: cache_packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         id: cache-packages  # give it a name for checking the cache hit-or-not
         with:
           path: ~/extra  # what we cache: the folder
