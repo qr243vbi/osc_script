@@ -1,6 +1,9 @@
+if command -v apt; then
+
 export SCRIPT_DIR=$PWD
 
 mkdir -p ~/extra/home ||:
+sudo mkdir -p /opensuse/extra
 
 (
 if [[ -d ~/extra/repo ]]; then
@@ -15,10 +18,17 @@ fi
 cd ~/extra/repo/pacman
 sudo bash -x ./aptbk.sh
 sudo bash -x ./aptat.sh
-sudo apt-get install zypper
+sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
-sudo zypper --gpg-auto-import-keys --non-interactive install osckit
+sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils env bash sed
+mount --bind ~/extra /opensuse/extra
+mount --bind $SCRIPT_DIR /opensuse/script
+systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /opensuse/script/github_action.sh
 )
+
+else
+
+mount --bind /extra/home $HOME
 
 (
 mkdir -p ~/.config/osc ||:
@@ -32,14 +42,13 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 )
 
 (
-cd ~/extra/home
-rm ./txt.sh
-ln ~/extra/repo/pacman/txt.sh ./txt.sh
-bash -x ./txt.sh
 cd Desktop
 osc co home:juzbun:kde-plasma -o kde-plasma
 cd kde-plasma
-ln $SCRIPT_DIR/*.sh ./
-INSTALL_ONLY=yes ./update_all.sh
-./update_all.sh
+export INSTALL_ONLY=yes
+source /extra/script/update_all.sh
+unset INSTALL_ONLY
+source /extra/script/update_all.sh
 )
+
+fi
