@@ -25,6 +25,9 @@ sudo apt-get install zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed
 sudo systemd-nspawn -D /opensuse /bin/env OBS_USER=${OBS_USER} OBS_PASSWORD=${OBS_PASSWORD} bash -x /script/github_actions.sh
+
+sudo chown `whoami` -Rfv $SCRIPT_DIR/extra
+sudo chgrp `whoami` -Rfv $SCRIPT_DIR/extra
 )
 
 else
@@ -43,6 +46,8 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 )
 
 (
+cd /extra/repo/pacman
+bash -x ./aptat.sh
 mkdir $HOME/Desktop
 cd $HOME/Desktop
 for i in 'gram'
