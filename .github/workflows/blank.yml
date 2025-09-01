@@ -13,6 +13,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  actions: write
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -23,25 +26,45 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: cache_packages_restore
+      - name: Restore Cache
         uses: actions/cache/restore@v4
         id: cache-packages-restore  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
-          key: ${{ runner.os }}-packages-${{ hashFiles('**/*.sh') }}
+          key: ${{ runner.os }}-packages-repo
           restore-keys: |
             ${{ runner.os }}-packages-
 
-      - name: update_project
+
+      - name: Clear Cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+              github.rest.actions.deleteActionsCacheById({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                cache_id: cache.id,
+              })
+            }
+            console.log("Clear completed")
+
+      - name: Update Project
         run: |
           env OBS_PROJECTS="${{ secrets.OBS_PROJECTS }}" OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
 
-      - name: cache_packages_save
+      - name: Save Cache
         uses: actions/cache/save@v4
         id: cache-packages-save  # give it a name for checking the cache hit-or-not
         with:
           path: extra  # what we cache: the folder
-          key: ${{ runner.os }}-packages-${{ hashFiles('**/*.sh') }}
+          key: ${{ runner.os }}-packages-repo
