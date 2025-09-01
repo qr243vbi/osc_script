@@ -45,7 +45,7 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 (
 mkdir $HOME/Desktop
 cd $HOME/Desktop
-for i in 'kde-plasma' 'gram'
+for i in 'gram'
 do
 set +e
 (
