@@ -52,9 +52,9 @@ set +e
 osc co home:juzbun:$i -o $i
 cd $i
 export INSTALL_ONLY=yes
-source /extra/script/update_all.sh
+source /script/update_all.sh
 unset INSTALL_ONLY
-source /extra/script/update_all.sh
+source /script/update_all.sh
 )
 set -e
 done
