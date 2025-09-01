@@ -13,7 +13,7 @@ do
   cd "$i"
   osc update
   osc service mr
-  osc add *
+  osc addremove
   osc ci -m update
   osc service rr
   osc rebuild
