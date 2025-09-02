@@ -60,8 +60,11 @@ for i in $OBS_PROJECTS
 do
 set +e
 (
+if [[ ! -d "$i" ]]; then
 osc co "home:${OBS_USER}:$i" -o $i
+fi
 cd $i
+osc update
 export INSTALL_ONLY=yes
 source /script/update_all.sh
 unset INSTALL_ONLY
