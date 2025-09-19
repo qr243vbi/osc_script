@@ -9,6 +9,7 @@ sudo mkdir -p /opensuse/{extra,script}
 (
 if [[ -d $SCRIPT_DIR/extra/repo ]]; then
   cd $SCRIPT_DIR/extra/repo
+  git stash ||:
   git pull
 else 
   git clone --depth 1 --single-branch https://github.com/huakim/repo-suse $SCRIPT_DIR/extra/repo
