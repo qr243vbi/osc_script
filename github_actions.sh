@@ -21,8 +21,6 @@ chmod 777 -Rfv $SCRIPT_DIR/extra
 sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
 sudo mount --bind $SCRIPT_DIR /opensuse/script
 cd $SCRIPT_DIR/extra/repo/pacman
-sudo apt-get update -y
-sudo apt-get upgrade -y
 sudo apt-get install -y zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed obs-tools-zypper-pkg
