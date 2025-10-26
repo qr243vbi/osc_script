@@ -21,7 +21,6 @@ chmod 777 -Rfv $SCRIPT_DIR/extra
 sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
 sudo mount --bind $SCRIPT_DIR /opensuse/script
 cd $SCRIPT_DIR/extra/repo/pacman
-sudo apt-get install -y zypper systemd-container
 sudo bash -x ./aptat.sh
 sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed obs-tools-zypper-pkg
 sudo systemd-nspawn -D /opensuse /bin/env "OBS_PROJECTS=${OBS_PROJECTS}" "OBS_USER=${OBS_USER}" "OBS_PASSWORD=${OBS_PASSWORD}" bash -x /script/github_actions.sh
