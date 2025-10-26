@@ -21,10 +21,6 @@ chmod 777 -Rfv $SCRIPT_DIR/extra
 sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
 sudo mount --bind $SCRIPT_DIR /opensuse/script
 cd $SCRIPT_DIR/extra/repo/pacman
-rm -rfv etc/apt
-cp -Rfv /etc/apt etc/apt
-sudo bash -x ./aptbk.sh
-sudo bash -x ./aptat.sh
 sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get install -y zypper systemd-container
