@@ -1,0 +1,89 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
+  schedule:
+    - cron: '0 23 * * 5'  # Runs every Friday at 23:00 UTC
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  trigger_rebuild_all:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore Cache
+        uses: actions/cache/restore@v4
+        id: cache-packages-restore  # give it a name for checking the cache hit-or-not
+        with:
+          path: extra  # what we cache: the folder
+          key: ${{ runner.os }}-packages-repo
+          restore-keys: |
+            ${{ runner.os }}-packages-
+
+
+      - name: Clear Cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("About to clear")
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+              github.rest.actions.deleteActionsCacheById({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                cache_id: cache.id,
+              })
+            }
+            console.log("Clear completed")
+
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: true
+
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: Update Project
+        run: |
+          env OBS_PROJECTS="${{ secrets.OBS_PROJECTS }}" OBS_USER="${{ secrets.OBS_USER }}" OBS_PASSWORD="${{ secrets.OBS_PASSWORD }}" bash -x ./github_actions.sh
+
+      - name: Save Cache
+        uses: actions/cache/save@v4
+        id: cache-packages-save
+        with:
+          path: extra  # what we cache: the folder
+          key: ${{ runner.os }}-packages-repo
+
