@@ -1,0 +1,15 @@
+version: '3.9'
+ 
+services:
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OBS_USER: ${OBS_USER}
+      OBS_PASSWORD: ${OBS_PASSWORD}
+      OBS_PROJECTS: ${OBS_PROJECTS}
+    volumes:
+      - ./cache:/extra
+      - ./:/script:Z
+    tty: true    # optional, keeps container running for interactive shell

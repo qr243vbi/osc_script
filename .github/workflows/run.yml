@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache/restore@v4
         id: cache-packages-restore  # give it a name for checking the cache hit-or-not
         with:
-          path: extra  # what we cache: the folder
+          path: cache  # what we cache: the folder
           key: ${{ runner.os }}-packages-repo
           restore-keys: |
             ${{ runner.os }}-packages-
@@ -58,7 +58,6 @@ jobs:
               })
             }
             console.log("Clear completed")
-
 
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -84,6 +83,6 @@ jobs:
         uses: actions/cache/save@v4
         id: cache-packages-save
         with:
-          path: extra  # what we cache: the folder
+          path: cache  # what we cache: the folder
           key: ${{ runner.os }}-packages-repo
 

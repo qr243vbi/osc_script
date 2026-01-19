@@ -1,41 +1,45 @@
-set -e
-if command -v apt; then
+clone_repo(){
+  git clone https://github.com/huakim/repo-suse "$1" ||:
+  (
+    cd "$1"
+    git pull ||:
+  )
+  bash "$1"/pacman/copy.sh ||:
+  bash "$1"/pacman/setup.sh ||:
+  bash "$1"/pacman/aptat.sh ||:
+}
 
-export SCRIPT_DIR=$PWD
+if [[ "$CONTAINER_RUN" != "yes" ]]
+then
 
-mkdir -p $SCRIPT_DIR/extra/home ||:
-sudo mkdir -p /opensuse/{extra,script}
+mkdir -p "$PWD/cache/pod/"{storage,run}
 
-(
-if [[ -d $SCRIPT_DIR/extra/repo ]]; then
-  cd $SCRIPT_DIR/extra/repo
-  git pull
-else 
-  git clone --depth 1 --single-branch https://github.com/huakim/repo-suse $SCRIPT_DIR/extra/repo
+cat << EOF > "$PWD/cache/pod/storage.conf"
+[storage]
+driver = "overlay"
+graphroot = "$PWD/cache/pod/storage"
+runroot = "$PWD/cache/pod/run"
+EOF
+
+export CONTAINERS_STORAGE_CONF="$PWD/cache/pod/storage.conf"
+
+if [[ -z `command -v podman` ]]
+then  
+  clone_repo cache/repo
+  if [[ -n `command -v zypper` ]]
+  then
+     zypper --gpg-auto-import-keys -v -v -v ref
+     zypper -n install python3-podman-compose podman 
+  else
+     apt-get update
+     apt-get install -y podman-compose podman
+  fi
 fi
-)
-
-(
-chmod 777 -Rfv $SCRIPT_DIR/extra
-sudo mount --bind $SCRIPT_DIR/extra /opensuse/extra
-sudo mount --bind $SCRIPT_DIR /opensuse/script
-cd $SCRIPT_DIR/extra/repo/pacman
-sudo bash -x ./aptbk.sh
-sudo bash -x ./aptat.sh
-sudo apt-get update -y
-sudo apt-get upgrade -y
-sudo apt-get install -y zypper systemd-container
-sudo bash -x ./aptat.sh
-sudo zypper --installroot=/opensuse --gpg-auto-import-keys --non-interactive install osckit coreutils bash sed obs-tools-zypper-pkg
-sudo systemd-nspawn -D /opensuse /bin/env "OBS_PROJECTS=${OBS_PROJECTS}" "OBS_USER=${OBS_USER}" "OBS_PASSWORD=${OBS_PASSWORD}" bash -x /script/github_actions.sh
-
-sudo chown `whoami` -Rfv $SCRIPT_DIR/extra
-sudo chgrp `whoami` -Rfv $SCRIPT_DIR/extra
-)
+podman compose up
 
 else
-
-mount --bind /extra/home $HOME
+export HOME="/extra/workdir"
+mkdir -p $HOME
 
 (
 mkdir -p "$HOME/.config/osc" ||:
@@ -49,13 +53,18 @@ echo 'credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManage
 )
 
 (
-cd /extra/repo/pacman
-bash -x ./aptat.sh
-mkdir $HOME/Desktop ||:
-cd $HOME/Desktop
-OBS_PROJECTS="${OBS_PROJECTS:-gram}"
+clone_repo /extra/repo
+
 rpmdb --rebuilddb
-zypper --gpg-auto-import-keys --non-interactive ref
+zypper --gpg-auto-import-keys -v -v -v --non-interactive ref
+zypper --gpg-auto-import-keys -v -v -v install -y osckit coreutils bash sed obs-tools-zypper-pkg
+
+cd /extra/repo/pacman
+
+mkdir "$HOME/Desktop" ||:
+cd "$HOME/Desktop"
+OBS_PROJECTS="${OBS_PROJECTS:-kde-plasma}"
+
 for i in $OBS_PROJECTS
 do
 set +e
