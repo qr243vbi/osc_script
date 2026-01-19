@@ -35,6 +35,7 @@ then
      apt-get install -y podman-compose podman
   fi
 fi
+systemctl start --user podman ||:
 podman compose up
 
 else
